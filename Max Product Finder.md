@@ -11,15 +11,50 @@ This challenge was reported to have been asked at interviews with Google. If you
 
 ```Java
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MaxProductFinder {
   public static void main(String[] args) {
-    int[] arr = new int[]{-8, 6, -7, 3, 2, 1, -9};
-    int result = maxProductFinderK(arr, 3);
+    int[] elements = new int[]{-8, 6, -7, 3, 2, 1, -9};
+    int result = maxProductFinderK(elements, 3);
     System.out.println(result);
   }
+    public static List<List<Integer>> generateNDigitEvents(int[] elements, int n) {
+        List<List<Integer>> result = new ArrayList<>();
+        generateNDigitEventsRecursive(elements, n, new ArrayList<>(), result);
+        return result;
+    }
+    private static void generateNDigitEventsRecursive(int[] elements, int n, List<Integer> current, List<List<Integer>> result) {
+        if (n == 0) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
 
-  public static int maxProductFinderK(int[] array, int k) {
+        for (int i = 0; i < elements.length; i++) {
+            if (!current.contains(elements[i])) {
+                current.add(elements[i]);
+                generateNDigitEventsRecursive(elements, n - 1, current, result);
+                current.remove(current.size() - 1);
+            }
+        }
+    }
+  public static int maxProductFinderK(int[] elements, int n) {
     // Write your code here
+        List<List<Integer>> result = generateNDigitEvents(elements, n);
+
+        int maxproduct = 0;
+
+        // Print the generated n-digit events
+        for (List<Integer> event : result) {
+            
+            int product = 1;
+            for (int f = 0; f < n; f++) {
+                product *= event.get(f);
+            }
+            maxproduct = Math.max(maxproduct, product);
+        }
+        return maxproduct;
   }
 }
 ```
